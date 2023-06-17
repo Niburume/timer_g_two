@@ -1,0 +1,108 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'package:timerg/helpers/notifications.dart';
+
+import 'package:timerg/screens/projects_screen.dart';
+import 'package:timerg/screens/set_project_screen.dart';
+import 'package:timerg/screens/timer_screen.dart';
+import 'package:timerg/widgets/timer_widget.dart';
+
+import '../widgets/status_widget.dart';
+
+class MainScreen extends StatefulWidget {
+  static const routeName = 'main_screen';
+
+  const MainScreen({Key? key}) : super(key: key);
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  final user = FirebaseAuth.instance.currentUser;
+
+  @override
+  void initState() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
+
+    checkIfInZoneEvery15Min();
+
+    super.initState();
+  }
+
+  void checkIfInZoneEvery15Min() async {}
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: signUserOut,
+            icon: const Icon(
+              Icons.logout,
+            ),
+          )
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            Text('Logged as ${user?.email} + ${user?.uid}'),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, SetProjectScreen.routeName);
+                },
+                child: const Text('Set project screen')),
+            ElevatedButton(
+                onPressed: () async {
+                  // startTimerNotification('time is started on', 'aaa:sss:ss');
+                  stopTimerNotification(
+                      title: 'title',
+                      body: 'body',
+                      onTap: () {
+                        Navigator.pushNamed(context, ProjectScreen.routeName);
+                      });
+                },
+                child: const Text('Show notification')),
+            ElevatedButton(
+                onPressed: () async {
+                  Navigator.pushNamed(context, TimerScreen.routeName);
+                },
+                child: const Text('TimerScreen')),
+            // ElevatedButton(
+            //     onPressed: () async {}, child: const Text('Start background')),
+            ElevatedButton(
+                onPressed: () async {
+                  showGeneralDialog(
+                      barrierDismissible: true,
+                      barrierLabel: 'Dismiss',
+                      context: context,
+                      transitionDuration: const Duration(milliseconds: 500),
+                      pageBuilder: (_, __, ___) {
+                        return const StatusW();
+                      });
+                },
+                child: const Text('Show Succes')),
+            Expanded(child: Container()),
+            TimerW(),
+            const SizedBox(
+              height: 30,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void signUserOut() {
+    FirebaseAuth.instance.signOut();
+  }
+}
