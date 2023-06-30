@@ -356,30 +356,30 @@ class _SetProjectScreenState extends State<SetProjectScreen> {
 
   Future<void> addProjectToDatabase() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    await DBHelper.instance
-        .createProject(Project(
-            latitude: pinPosition.latitude,
-            longitude: pinPosition.longitude,
-            projectName: nameController.text,
-            address: pinPosition.address,
-            radius: pinPosition.radius,
-            note: noteController.text.isEmpty ? '' : noteController.text,
-            users: [userId!]))
-        .then((value) => {
-              CoolAlert.show(
-                  title: 'The Project has been added',
-                  closeOnConfirmBtnTap: true,
-                  onConfirmBtnTap: () {
-                    Navigator.pop(context);
-                    getExistingProjects();
-                  },
-
-                  // autoCloseDuration: const Duration(milliseconds: 3000),
-                  animType: CoolAlertAnimType.slideInRight,
-                  context: context,
-                  type: CoolAlertType.success)
-              // Navigator.pop(context)
-            });
+    await DBHelper.instance.createProject(Project(
+        latitude: pinPosition.latitude,
+        longitude: pinPosition.longitude,
+        projectName: nameController.text,
+        address: pinPosition.address,
+        radius: pinPosition.radius,
+        note: noteController.text.isEmpty ? '' : noteController.text,
+        users: [userId!]));
+    // .then((value) => {
+    //       CoolAlert.show(
+    //           title: 'The Project has been added',
+    //           closeOnConfirmBtnTap: true,
+    //           onConfirmBtnTap: () {
+    //             Navigator.pop(context);
+    //             getExistingProjects();
+    //           },
+    //
+    //           // autoCloseDuration: const Duration(milliseconds: 3000),
+    //           animType: CoolAlertAnimType.slideInRight,
+    //           context: context,
+    //           type: CoolAlertType.success)
+    //       // Navigator.pop(context)
+    //     }
+    //     );
   }
 // endregion
 

@@ -1,6 +1,8 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timerg/controllers/timer/timer_cubit.dart';
 
 import 'package:timerg/helpers/notifications.dart';
 
@@ -89,6 +91,7 @@ class _MainScreenState extends State<MainScreen> {
                       pageBuilder: (_, __, ___) {
                         return const StatusW();
                       });
+                  context.read<TimerCubit>().startTimer();
                 },
                 child: const Text('Show Succes')),
             Expanded(child: Container()),

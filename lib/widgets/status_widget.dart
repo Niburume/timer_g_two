@@ -17,7 +17,7 @@ class _StatusWState extends State<StatusW> {
       isAnimationComplete = true;
       isIconHidden = false;
     });
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       animationValue = 0;
       isIconHidden = true;
       isAnimationComplete = false;
@@ -28,8 +28,7 @@ class _StatusWState extends State<StatusW> {
   void animateCircle() {
     if (!isAnimationComplete) {
       Future.delayed(const Duration(milliseconds: 10), () {
-        animationValue += 0.02;
-        print(animationValue);
+        animationValue += 0.05;
         if (animationValue >= 1) showIcon();
 // Here you can write your code
 
@@ -45,8 +44,8 @@ class _StatusWState extends State<StatusW> {
     if (!isAnimationComplete) animateCircle();
     return Dialog(
       child: SizedBox(
-        height: 300,
-        width: 300,
+        height: 300 * animationValue,
+        width: 300 * animationValue,
         child: Stack(
           alignment: Alignment.center,
           fit: StackFit.expand,

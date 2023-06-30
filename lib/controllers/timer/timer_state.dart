@@ -4,31 +4,46 @@ class TimerState extends Equatable {
   bool autoMode;
   bool isRunning;
   bool isAddButtonVisible;
+  bool timeChangedManually;
+  String hours;
+  String minutes;
+  String seconds;
   Project? currentProject;
   Duration duration;
   Timer? timer;
-  DateTime startTime;
-  DateTime endTime;
+  DateTime currentDate;
+  DateTime? startTime;
+  DateTime? endTime;
   String? note;
 
   TimerState(
       {required this.autoMode,
       required this.isRunning,
       required this.isAddButtonVisible,
+      required this.timeChangedManually,
+      required this.hours,
+      required this.minutes,
+      required this.seconds,
       this.currentProject,
       required this.duration,
       this.timer,
-      required this.startTime,
-      required this.endTime,
+      required this.currentDate,
+      this.startTime,
+      this.endTime,
       required this.note});
 
   factory TimerState.initial() => TimerState(
       autoMode: false,
       isRunning: false,
       isAddButtonVisible: false,
+      timeChangedManually: false,
+      hours: '00',
+      minutes: '00',
+      seconds: '00',
       duration: const Duration(),
-      startTime: DateTime.now(),
-      endTime: DateTime.now(),
+      currentDate: DateTime.now(),
+      startTime: null,
+      endTime: null,
       note: null);
 
   @override
@@ -36,9 +51,14 @@ class TimerState extends Equatable {
         autoMode,
         isRunning,
         isAddButtonVisible,
+        timeChangedManually,
+        hours,
+        minutes,
+        seconds,
         currentProject,
         duration,
         timer,
+        currentDate,
         startTime,
         endTime,
         note
@@ -48,9 +68,14 @@ class TimerState extends Equatable {
     bool? autoMode,
     bool? isRunning,
     bool? isAddButtonVisible,
+    bool? timeAddedManually,
+    String? hours,
+    String? minutes,
+    String? seconds,
     Project? currentProject,
     Duration? duration,
     Timer? timer,
+    DateTime? currentDate,
     DateTime? startTime,
     DateTime? endTime,
     String? note,
@@ -59,9 +84,14 @@ class TimerState extends Equatable {
       autoMode: autoMode ?? this.autoMode,
       isRunning: isRunning ?? this.isRunning,
       isAddButtonVisible: isAddButtonVisible ?? this.isAddButtonVisible,
+      timeChangedManually: timeAddedManually ?? this.timeChangedManually,
+      hours: hours ?? this.hours,
+      minutes: minutes ?? this.minutes,
+      seconds: seconds ?? this.seconds,
       currentProject: currentProject ?? this.currentProject,
       duration: duration ?? this.duration,
       timer: timer ?? this.timer,
+      currentDate: currentDate ?? this.currentDate,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       note: note ?? this.note,
