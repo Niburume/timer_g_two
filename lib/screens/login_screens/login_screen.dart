@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:timerg/components/login_textfield.dart';
 import 'package:timerg/components/general_button.dart';
 import 'package:timerg/constants/constants.dart';
+import 'package:timerg/helpers/helper_UI.dart';
 import '../../components/square_tile.dart';
 
 class LogInScreen extends StatefulWidget {
@@ -20,6 +21,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
@@ -29,21 +32,14 @@ class _LogInScreenState extends State<LogInScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                //  const Foo(2),
-                const SizedBox(
-                  height: 50,
-                ),
-                const Icon(
+                verticalSpace(0.05, context),
+                Icon(
                   Icons.lock,
-                  size: 100,
+                  size: height * 0.1,
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
+                verticalSpace(0.05, context),
                 const Text(tgreetingText),
-                const SizedBox(
-                  height: 25,
-                ),
+                verticalSpace(0.025, context),
                 LoginTextfield(
                   controller: emailController,
                   hintText: tNickname,
@@ -57,21 +53,16 @@ class _LogInScreenState extends State<LogInScreen> {
                 Text(
                   'Forgot password?',
                 ),
-                const Icon(
+                Icon(
                   Icons.lock,
-                  size: 30,
+                  size: height * 0.03,
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
-
+                verticalSpace(0.025, context),
                 GeneralButton(
                   onTap: signUserIn,
                   title: 'Sign Up',
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
+                verticalSpace(0.025, context),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Row(
@@ -100,22 +91,18 @@ class _LogInScreenState extends State<LogInScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 50,
-                ),
-                const Row(
+                verticalSpace(0.05, context),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SquareTile(imagePath: 'assets/images/apple_logo2.png'),
-                    SizedBox(
-                      width: 100,
-                    ),
-                    SquareTile(imagePath: 'assets/images/google_logo.jpg'),
+                    const SquareTile(
+                        imagePath: 'assets/images/apple_logo2.png'),
+                    horizontalSpace(0.05, context),
+                    const SquareTile(
+                        imagePath: 'assets/images/google_logo.jpg'),
                   ],
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
+                verticalSpace(0.025, context),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

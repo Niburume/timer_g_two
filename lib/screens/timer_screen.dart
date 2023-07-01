@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timerg/components/general_button.dart';
 import 'package:timerg/controllers/timer/timer_cubit.dart';
 import 'package:timerg/controllers/timer_provider.dart';
+import 'package:timerg/helpers/helper_UI.dart';
+import 'package:timerg/nav_bar/nav_bar.dart';
 import 'package:timerg/screens/choose_project_screen.dart';
 import 'package:timerg/screens/projects_screen.dart';
 import 'package:timerg/widgets/time_card.dart';
 
 import '../controllers/data/data_cubit.dart';
+import '../nav_bar/nav_bar.dart';
 import '../utilities/snack_bar.dart';
 import '../widgets/status_widget.dart';
 
@@ -32,6 +35,8 @@ class _TimerScreenState extends State<TimerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return BlocBuilder<TimerCubit, TimerState>(
       builder: (context, state) {
         final cubit = TimerCubit();
@@ -71,9 +76,7 @@ class _TimerScreenState extends State<TimerScreen> {
                                   .chooseTime(context, state.currentDate);
                             },
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          horizontalSpace(0.01, context),
                           TimeCard(
                             value: state.minutes,
                             units: 'minutes',
@@ -83,9 +86,7 @@ class _TimerScreenState extends State<TimerScreen> {
                                   .chooseTime(context, state.currentDate);
                             },
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          horizontalSpace(0.01, context),
                           context.watch<TimerCubit>().state.isRunning
                               ? TimeCard(
                                   value: state.seconds,
@@ -99,9 +100,7 @@ class _TimerScreenState extends State<TimerScreen> {
                               : Container()
                         ],
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
+                      verticalSpace(0.015, context),
                       GestureDetector(
                         onTap: () {
                           context.read<TimerCubit>().chooseDate(context);
@@ -111,7 +110,7 @@ class _TimerScreenState extends State<TimerScreen> {
                           children: [
                             DateCard(
                               value: dateString(state.currentDate),
-                              fontSizeValue: 15,
+                              fontSizeValue: height * 0.015,
                             )
                           ],
                         ),
@@ -129,19 +128,20 @@ class _TimerScreenState extends State<TimerScreen> {
                               ? Text(
                                   '-//-',
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: height * 0.013,
                                       color: Colors.grey.shade600),
                                 )
                               : Text(
                                   '${state.startTime!.hour}:${state.startTime!.minute}',
                                   style: TextStyle(
-                                      fontSize: 13,
+                                      fontSize: height * 0.013,
                                       color: Colors.grey.shade600),
                                 ),
                           Text(
                             'started',
                             style: TextStyle(
-                                fontSize: 10, color: Colors.grey.shade500),
+                                fontSize: height * 0.01,
+                                color: Colors.grey.shade500),
                           )
                         ],
                       ),
@@ -155,8 +155,11 @@ class _TimerScreenState extends State<TimerScreen> {
                         padding: const EdgeInsets.only(left: 8, right: 8),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.pushNamed(
-                                context, ChooseProjectScreen.routeName);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const ChooseProjectScreen()));
+                            // Navigator.pushNamed(
+                            //     context, ChooseProjectScreen.routeName);
                           },
                           child: Container(
                               decoration: BoxDecoration(
@@ -209,9 +212,9 @@ class _TimerScreenState extends State<TimerScreen> {
                                     onPressed: () {
                                       print('camera');
                                     },
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.camera_alt_outlined,
-                                      size: 40,
+                                      size: height * 0.04,
                                     )),
                               ),
                             ],
@@ -242,6 +245,7 @@ class _TimerScreenState extends State<TimerScreen> {
                         ? Colors.blueGrey
                         : Colors.greenAccent.shade100,
                   ),
+                  verticalSpace(0.03, context)
                   // endregion
                 ],
               ),

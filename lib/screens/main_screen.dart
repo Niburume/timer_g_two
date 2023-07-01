@@ -9,8 +9,8 @@ import 'package:timerg/helpers/notifications.dart';
 import 'package:timerg/screens/projects_screen.dart';
 import 'package:timerg/screens/set_project_screen.dart';
 import 'package:timerg/screens/timer_screen.dart';
-import 'package:timerg/widgets/timer_widget.dart';
 
+import '../nav_bar/nav_bar.dart';
 import '../widgets/status_widget.dart';
 
 class MainScreen extends StatefulWidget {
@@ -76,7 +76,9 @@ class _MainScreenState extends State<MainScreen> {
                 child: const Text('Show notification')),
             ElevatedButton(
                 onPressed: () async {
-                  Navigator.pushNamed(context, TimerScreen.routeName);
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => TimerScreen()));
+                  // Navigator.pushNamed(context, TimerScreen.routeName);
                 },
                 child: const Text('TimerScreen')),
             // ElevatedButton(
@@ -93,12 +95,12 @@ class _MainScreenState extends State<MainScreen> {
                       });
                   context.read<TimerCubit>().startTimer();
                 },
-                child: const Text('Show Succes')),
+                child: const Text('Show Success')),
             Expanded(child: Container()),
-            TimerW(),
+            // TimerW(),
             const SizedBox(
               height: 30,
-            )
+            ),
           ],
         ),
       ),

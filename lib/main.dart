@@ -7,6 +7,7 @@ import 'package:timerg/screens/choose_project_screen.dart';
 
 import 'package:timerg/screens/login_screens/auth_screen.dart';
 import 'package:timerg/screens/projects_screen.dart';
+import 'package:timerg/screens/settings_screen.dart';
 import 'package:timerg/screens/timer_screen.dart';
 
 import 'controllers/data/data_cubit.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
         ProjectScreen.routeName: (context) => const ProjectScreen(),
         ChooseProjectScreen.routeName: (context) => const ChooseProjectScreen(),
         TimerScreen.routeName: (context) => const TimerScreen(),
+        SettingsScreen.routeName: (context) => const SettingsScreen(),
 
         // PinPositionScreen.routeName: (context) => PinPositionScreen,
 

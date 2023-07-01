@@ -12,6 +12,7 @@ import 'package:timerg/Models/pin_position_model.dart';
 import 'package:timerg/Models/project_model.dart';
 import 'package:timerg/helpers/geo_controller.dart';
 import 'package:timerg/helpers/geolocator.dart';
+import 'package:timerg/helpers/helper_UI.dart';
 
 import 'package:timerg/widgets/confimation.dart';
 import 'package:geocoder2/geocoder2.dart';
@@ -78,16 +79,17 @@ class _SetProjectScreenState extends State<SetProjectScreen> {
       _initialCameraPosition = CameraPosition(target: latLng);
     } else {
       _initialCameraPosition = CameraPosition(
-          target: const LatLng(50.42, -122.08), zoom: _currentZoom);
+          target: const LatLng(58.42, -122.08), zoom: _currentZoom);
     }
 // region UI
     return Scaffold(
       key: homeScaffoldKey,
-      appBar: AppBar(
-        title: const Text('SearchScreen'),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: const Text('SearchScreen'),
+      //   centerTitle: true,
+      // ),
       body: Stack(
+        clipBehavior: Clip.none,
         children: [
           GoogleMap(
             circles: _circles,
@@ -118,8 +120,8 @@ class _SetProjectScreenState extends State<SetProjectScreen> {
                       child: Slider(
                         value: _desiredRadius,
                         min: 1,
-                        max: 1000,
-                        divisions: 1000,
+                        max: 300,
+                        divisions: 300,
                         onChanged: (double value) {
                           setState(() {
                             _desiredRadius = value;
@@ -158,9 +160,7 @@ class _SetProjectScreenState extends State<SetProjectScreen> {
                       child: const Text('Add Project')),
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              )
+              verticalSpace(0.07, context)
             ],
           )
         ],
@@ -356,30 +356,30 @@ class _SetProjectScreenState extends State<SetProjectScreen> {
 
   Future<void> addProjectToDatabase() async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    await DBHelper.instance.createProject(Project(
-        latitude: pinPosition.latitude,
-        longitude: pinPosition.longitude,
-        projectName: nameController.text,
-        address: pinPosition.address,
-        radius: pinPosition.radius,
-        note: noteController.text.isEmpty ? '' : noteController.text,
-        users: [userId!]));
-    // .then((value) => {
-    //       CoolAlert.show(
-    //           title: 'The Project has been added',
-    //           closeOnConfirmBtnTap: true,
-    //           onConfirmBtnTap: () {
-    //             Navigator.pop(context);
-    //             getExistingProjects();
-    //           },
-    //
-    //           // autoCloseDuration: const Duration(milliseconds: 3000),
-    //           animType: CoolAlertAnimType.slideInRight,
-    //           context: context,
-    //           type: CoolAlertType.success)
-    //       // Navigator.pop(context)
-    //     }
-    //     );
+    await DBHelper.instance
+        .createProject(Project(
+            latitude: pinPosition.latitude,
+            longitude: pinPosition.longitude,
+            projectName: nameController.text,
+            address: pinPosition.address,
+            radius: pinPosition.radius,
+            note: noteController.text.isEmpty ? '' : noteController.text,
+            users: [userId!]))
+        .then((value) => {
+              CoolAlert.show(
+                  title: 'The Project has been added',
+                  closeOnConfirmBtnTap: true,
+                  onConfirmBtnTap: () {
+                    Navigator.pop(context);
+                    getExistingProjects();
+                  },
+
+                  // autoCloseDuration: const Duration(milliseconds: 3000),
+                  animType: CoolAlertAnimType.slideInRight,
+                  context: context,
+                  type: CoolAlertType.success)
+              // Navigator.pop(context)
+            });
   }
 // endregion
 
