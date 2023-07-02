@@ -7,6 +7,7 @@ import 'package:timerg/widgets/serch_field.dart';
 
 import '../Models/project_model.dart';
 import '../controllers/data/data_cubit.dart';
+import '../controllers/settings/settings_cubit.dart';
 import '../controllers/timer/timer_cubit.dart';
 
 class ChooseProjectScreen extends StatefulWidget {
@@ -95,8 +96,7 @@ class _ChooseProjectScreenState extends State<ChooseProjectScreen> {
                                 context
                                     .read<TimerCubit>()
                                     .setCurrentProject(_projects[i]);
-                                Navigator.pop(
-                                    context, _projects[i].projectName);
+                                context.read<SettingsCubit>().setTabBarIndex(1);
                                 print(_projects[i].projectName);
                               },
                               child: listTile(_projects[i].projectName,

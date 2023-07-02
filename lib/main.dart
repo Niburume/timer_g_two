@@ -11,6 +11,7 @@ import 'package:timerg/screens/settings_screen.dart';
 import 'package:timerg/screens/timer_screen.dart';
 
 import 'controllers/data/data_cubit.dart';
+import 'controllers/settings/settings_cubit.dart';
 import 'controllers/timer/timer_cubit.dart';
 import 'firebase_options.dart';
 import 'package:timerg/screens/main_screen.dart';
@@ -42,7 +43,8 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(create: (BuildContext context) => DataCubit()),
-      BlocProvider(create: (BuildContext context) => TimerCubit())
+      BlocProvider(create: (BuildContext context) => TimerCubit()),
+      BlocProvider(create: (BuildContext context) => SettingsCubit())
     ],
     child: const MyApp(),
   ));

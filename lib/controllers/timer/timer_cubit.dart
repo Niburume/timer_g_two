@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,20 +13,18 @@ import '../../Models/project_model.dart';
 import '../../Models/time_entry_model.dart';
 import '../../constants/constants.dart';
 import '../../helpers/db_helper.dart';
+import '../../helpers/geo_controller.dart';
 import '../../screens/choose_project_screen.dart';
 import '../../utilities/snack_bar.dart';
 import '../../widgets/status_widget.dart';
 import '../../widgets/timePicker.dart';
 import '../data/data_cubit.dart';
+import '../settings/settings_cubit.dart';
 
 part 'timer_state.dart';
 
 class TimerCubit extends Cubit<TimerState> {
   TimerCubit() : super(TimerState.initial());
-
-  void switchAutoMode() {
-    emit(state.copyWith(autoMode: !state.autoMode));
-  }
 
   void setCurrentProject(Project project) {
     emit(state.copyWith(currentProject: project));
@@ -33,6 +32,13 @@ class TimerCubit extends Cubit<TimerState> {
 
   void onNoteChange(String value) {
     emit(state.copyWith(note: value));
+  }
+
+  void switchAutoMode() {
+    emit(state.copyWith(autoMode: !state.autoMode));
+    if (!state.autoMode) {
+      stopTimer();
+    }
   }
 
   void addTime() {
@@ -84,21 +90,6 @@ class TimerCubit extends Cubit<TimerState> {
   void chooseTime(BuildContext context, DateTime? initialTime) {
     if (state.isRunning) return;
 
-    // if (timeToSet == Time.total) {
-    //   initialTime = DateTime.now();
-    //   initialTime = DateTime(
-    //       initialTime.year,
-    //       initialTime.month,
-    //       initialTime.day,
-    //       8,
-    //       0,
-    //       initialTime.second,
-    //       initialTime.millisecond,
-    //       initialTime.microsecond);
-    // } else {
-    //   initialTime ??= startTime;
-    // }
-
     showGeneralDialog(
         barrierDismissible:
             true, // Set to true to dismiss the dialog on tap outside
@@ -130,6 +121,28 @@ class TimerCubit extends Cubit<TimerState> {
   }
   // endregion
 
+  // region Tracking function
+
+  void startTracking(List<Project> projects) async {
+    Timer.periodic(tRequestFrequency, (Timer timer) async {
+      if (projects.isEmpty) {
+        print('Projects are empty, create the project');
+      } else {
+        // Get the current position
+        Project? foundProject = await GeoController.instance
+            .checkDistanceOfProjectsToPosition(projects);
+
+        if (foundProject != null && state.autoMode) {
+          emit(state.copyWith(currentProject: foundProject));
+          startTimer();
+        } else if (foundProject == null && state.isRunning) {
+          saveTimeEntry();
+        }
+      }
+    });
+  }
+  // endregion
+
   void timeFromDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     final String hours = twoDigits(duration.inHours.remainder(60));
@@ -138,21 +151,12 @@ class TimerCubit extends Cubit<TimerState> {
     emit(state.copyWith(hours: hours, minutes: minutes, seconds: seconds));
   }
 
-  Future<void> saveTimeEntry(BuildContext context, String currentUserId) async {
-    if (context.read<TimerCubit>().state.currentProject == null) {
-      showSnackBar(
-          context: context,
-          title: 'You have to set the project',
-          actionTitle: 'Set project',
-          onTap: () {
-            Navigator.pushNamed(context, ChooseProjectScreen.routeName);
-          });
-
-      return;
-    }
+  Future<void> saveTimeEntry() async {
     stopTimer();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {}
     TimeEntry timeEntry = TimeEntry(
-        userId: currentUserId,
+        userId: user?.uid ?? '',
         duration: state.duration.toString(),
         projectId: state.currentProject!.id!,
         timeFrom: state.startTime,
@@ -160,22 +164,10 @@ class TimerCubit extends Cubit<TimerState> {
         note: state.note,
         autoAdding: state.autoMode);
 
-    // String? entryId =
     await DBHelper.instance.addTime(timeEntry);
     // if (entryId != null) {
     //   emit(state.copyWith(duration: const Duration()));
     // }
-    if (context.mounted) {
-      resetTimer();
-
-      Navigator.pushReplacementNamed(context, MainScreen.routeName);
-      showGeneralDialog(
-          barrierDismissible: true,
-          barrierLabel: 'Dismiss',
-          context: context,
-          pageBuilder: (_, __, ___) {
-            return const StatusW();
-          });
-    }
+    resetTimer();
   }
 }

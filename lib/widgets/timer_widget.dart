@@ -121,7 +121,7 @@ class _TimerWState extends State<TimerW> {
           child: Switch(
             value: context.read<TimerCubit>().state.autoMode,
             onChanged: (_) {
-              context.read<TimerCubit>().switchAutoMode();
+              // context.read<TimerCubit>().switchAutoMode();
               startTracking();
               setState(() {});
             },
@@ -468,7 +468,7 @@ class _TimerWState extends State<TimerW> {
           title: 'Auto mode is on, do you want to disable it?',
           actionTitle: 'Disable auto',
           onTap: () {
-            context.read<TimerCubit>().switchAutoMode();
+            // context.read<TimerCubit>().switchAutoMode();
             stopTimer();
             setState(() {
               return;
@@ -601,9 +601,7 @@ class _TimerWState extends State<TimerW> {
         });
   }
 
-  void calculateTotalTime() {
-    duration = endTime.difference(startTime);
-  }
+  void calculateTotalTime() {}
 
   String timeFromDurationHM(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');

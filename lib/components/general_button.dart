@@ -13,8 +13,8 @@ class GeneralButton extends StatelessWidget {
       required this.title,
       this.backgroundColor = Colors.black,
       this.textColor = Colors.white,
-      this.padding = 25,
-      this.margin = 25});
+      this.padding = 15,
+      this.margin = 15});
 
   @override
   Widget build(BuildContext context) {

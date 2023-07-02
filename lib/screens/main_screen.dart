@@ -2,6 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:timerg/controllers/settings/settings_cubit.dart';
 import 'package:timerg/controllers/timer/timer_cubit.dart';
 
 import 'package:timerg/helpers/notifications.dart';
@@ -33,12 +34,8 @@ class _MainScreenState extends State<MainScreen> {
       }
     });
 
-    checkIfInZoneEvery15Min();
-
     super.initState();
   }
-
-  void checkIfInZoneEvery15Min() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +73,10 @@ class _MainScreenState extends State<MainScreen> {
                 child: const Text('Show notification')),
             ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => TimerScreen()));
+                  context.read<SettingsCubit>().setTabBarIndex(1);
+                  setState(() {});
+                  // Navigator.of(context).push(
+                  //     MaterialPageRoute(builder: (context) => TimerScreen()));
                   // Navigator.pushNamed(context, TimerScreen.routeName);
                 },
                 child: const Text('TimerScreen')),
