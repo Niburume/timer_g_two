@@ -7,6 +7,11 @@
 <string>This app needs access to location when open.</string>
 <key>NSLocationAlwaysUsageDescription</key>
 <string>This app needs access to location when in the background.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>This app needs access to location when in the background.</string>
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to your photos and camera to upload and take the pictures.</string>
 
 <key>io.flutter.embedded_views_preview</key><true/>
 

@@ -125,19 +125,17 @@ class TimerCubit extends Cubit<TimerState> {
 
   void startTracking(List<Project> projects) async {
     Timer.periodic(tRequestFrequency, (Timer timer) async {
-      if (projects.isEmpty) {
-        print('Projects are empty, create the project');
-      } else {
-        // Get the current position
-        Project? foundProject = await GeoController.instance
-            .checkDistanceOfProjectsToPosition(projects);
+      // Get the current position
+      Project? foundProject = await GeoController.instance
+          .checkDistanceOfProjectsToPosition(projects);
 
-        if (foundProject != null && state.autoMode) {
-          emit(state.copyWith(currentProject: foundProject));
-          startTimer();
-        } else if (foundProject == null && state.isRunning) {
-          saveTimeEntry();
-        }
+      if (foundProject != null && state.autoMode) {
+        emit(state.copyWith(currentProject: foundProject));
+        startTimer();
+      } else if (foundProject == null &&
+          state.isRunning &&
+          state.duration != Duration.zero) {
+        saveTimeEntry();
       }
     });
   }

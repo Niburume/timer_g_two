@@ -14,7 +14,6 @@ class GeoController {
   Future<Project?> checkDistanceOfProjectsToPosition(
       List<Project> projects) async {
     Project? foundProject;
-
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );

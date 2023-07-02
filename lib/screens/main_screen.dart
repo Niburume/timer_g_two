@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timerg/controllers/settings/settings_cubit.dart';
 import 'package:timerg/controllers/timer/timer_cubit.dart';
+import 'package:timerg/helpers/geolocator.dart';
 
 import 'package:timerg/helpers/notifications.dart';
 
@@ -33,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-
+    GeoPosition.instance.determinePosition();
     super.initState();
   }
 
