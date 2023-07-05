@@ -17,7 +17,6 @@ class GeoController {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
-
     for (var project in projects) {
       var distance = calculateDistanceInMeters(
           LatLng(position.latitude, position.longitude),

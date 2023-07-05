@@ -5,17 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:timerg/components/general_button.dart';
 import 'package:timerg/controllers/settings/settings_cubit.dart';
 import 'package:timerg/controllers/timer/timer_cubit.dart';
-import 'package:timerg/controllers/timer_provider.dart';
 import 'package:timerg/helpers/helper_UI.dart';
-import 'package:timerg/nav_bar/nav_bar.dart';
-import 'package:timerg/screens/choose_project_screen.dart';
-import 'package:timerg/screens/projects_screen.dart';
-import 'package:timerg/widgets/time_card.dart';
 
-import '../controllers/data/data_cubit.dart';
-import '../nav_bar/nav_bar.dart';
-import '../utilities/snack_bar.dart';
-import '../widgets/status_widget.dart';
+import 'package:timerg/widgets/time_card.dart';
 
 class TimerScreen extends StatefulWidget {
   static const routeName = 'timer_screen';
@@ -151,66 +143,68 @@ class _TimerScreenState extends State<TimerScreen> {
                   // region SWITCH ANF PROJECT AND NOTE AND CAMERA
                   Column(
                     children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                              height: height * 0.03,
+                              width: height * 0.03,
+                              child: state.isLoading
+                                  ? CircularProgressIndicator()
+                                  : Container()),
+                          state.isLoading
+                              ? Text('Determining position')
+                              : Text('')
+                        ],
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Switch(
                               value: state.autoMode,
                               onChanged: (_) async {
-                                if (!state.autoMode) {
-                                  await context
-                                      .read<DataCubit>()
-                                      .queryAllProjects();
-                                }
                                 cubit.switchAutoMode();
-                                cubit.startTracking(
-                                    context.read<DataCubit>().state.projects);
                               }),
                           horizontalSpace(0.015, context)
                         ],
                       ),
-                      state.currentProject != null
-                          ? Padding(
-                              padding: const EdgeInsets.only(left: 8, right: 8),
-                              child: GestureDetector(
-                                onTap: () {
-                                  context
-                                      .read<SettingsCubit>()
-                                      .setTabBarIndex(2);
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                            colors: [
-                                              Colors.grey.shade300,
-                                              Colors.blueGrey.shade200,
-                                            ],
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomCenter),
-                                        border: Border.all(),
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.blueGrey.shade100),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: Text(
-                                          state.currentProject?.projectName ??
-                                              'Set project',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ),
-                                    )),
-                              ),
-                            )
-                          : Container(),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8, right: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.read<SettingsCubit>().setTabBarIndex(2);
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        Colors.grey.shade300,
+                                        Colors.blueGrey.shade200,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomCenter),
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: Colors.blueGrey.shade100),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text(
+                                    state.currentProject?.projectName ??
+                                        'Set project',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
                       Column(
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
                               controller: controller,
-                              maxLines: 5,
+                              maxLines: 2,
                               decoration: InputDecoration(
                                   filled: true,
                                   fillColor: Colors.grey.shade400,
@@ -249,24 +243,15 @@ class _TimerScreenState extends State<TimerScreen> {
                           context.read<SettingsCubit>().setTabBarIndex(2);
                         },
                         title: 'Set project')
-                  else if (state.autoMode && !state.isRunning)
-                    Column(
-                      children: [
-                        SizedBox(
-                            height: height * 0.03,
-                            width: height * 0.03,
-                            child: CircularProgressIndicator()),
-                        Text('Determining position')
-                      ],
-                    )
                   else if (state.autoMode && state.isRunning)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          'Timer is on by position',
-                          style: TextStyle(color: Colors.green),
-                        ),
+                        GeneralButton(
+                            onTap: () {},
+                            backgroundColor: Colors.transparent,
+                            textColor: Colors.green,
+                            title: 'Auto mode is on...')
                       ],
                     )
                   else if (!state.autoMode && state.duration == Duration.zero)
@@ -306,27 +291,13 @@ class _TimerScreenState extends State<TimerScreen> {
                               title: 'Send time'),
                         ),
                       ],
-                    ),
-                  // GeneralButton(
-                  //   onTap: () async {
-                  //     state.isRunning
-                  //         ? context.read<TimerCubit>().saveTimeEntry(context,
-                  //             context.read<DataCubit>().state.currentUserId)
-                  //         : context.read<TimerCubit>().startTimer();
-                  //   },
-                  //   title: state.isRunning
-                  //       ? 'Check out'
-                  //       : state.timeChangedManually
-                  //           ? 'Check out'
-                  //           : 'Check in',
-                  //   padding: 15,
-                  //   backgroundColor: context.watch<TimerCubit>().state.isRunning
-                  //       ? Colors.greenAccent.shade100
-                  //       : Colors.blueGrey,
-                  //   textColor: context.watch<TimerCubit>().state.isRunning
-                  //       ? Colors.blueGrey
-                  //       : Colors.greenAccent.shade100,
-                  // ),
+                    )
+                  else
+                    GeneralButton(
+                        onTap: () {},
+                        backgroundColor: Colors.transparent,
+                        title: 'Is loading'),
+
                   verticalSpace(0.03, context)
                   // endregion
                 ],

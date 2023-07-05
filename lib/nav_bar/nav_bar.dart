@@ -9,6 +9,7 @@ import 'package:timerg/screens/timer_screen.dart';
 
 import '../controllers/settings/settings_cubit.dart';
 import '../screens/settings_screen.dart';
+import '../screens/test_Screen.dart';
 
 class CustomBottomBar extends StatefulWidget {
   static final customBottomBar = GlobalKey<_CustomBottomBarState>();
@@ -34,6 +35,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
         const MainScreen(),
         const TimerScreen(),
         const ChooseProjectScreen(),
+        // const MapSample(),
         const SetProjectScreen(),
         const SettingsScreen(),
       ];

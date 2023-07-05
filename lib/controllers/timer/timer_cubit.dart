@@ -34,8 +34,11 @@ class TimerCubit extends Cubit<TimerState> {
     emit(state.copyWith(note: value));
   }
 
-  void switchAutoMode() {
+  void switchAutoMode() async {
     emit(state.copyWith(autoMode: !state.autoMode));
+    if (state.autoMode) {
+      startTracking();
+    }
     if (!state.autoMode) {
       stopTimer();
     }
@@ -47,6 +50,9 @@ class TimerCubit extends Cubit<TimerState> {
     final seconds = state.duration.inSeconds + addSeconds;
     emit(state.copyWith(duration: Duration(seconds: seconds)));
     timeFromDuration(state.duration);
+    if (state.duration.inSeconds % 600 == 0) {
+      startTracking();
+    }
   }
 
   // region TimerActions
@@ -123,21 +129,24 @@ class TimerCubit extends Cubit<TimerState> {
 
   // region Tracking function
 
-  void startTracking(List<Project> projects) async {
-    Timer.periodic(tRequestFrequency, (Timer timer) async {
-      // Get the current position
-      Project? foundProject = await GeoController.instance
-          .checkDistanceOfProjectsToPosition(projects);
+  Future<void> startTracking() async {
+    emit(state.copyWith(isLoading: true));
+    List<Project> projects = await DBHelper.instance.queryAllProjects();
+    Project? foundProject = await GeoController.instance
+        .checkDistanceOfProjectsToPosition(projects);
 
-      if (foundProject != null && state.autoMode) {
-        emit(state.copyWith(currentProject: foundProject));
-        startTimer();
-      } else if (foundProject == null &&
-          state.isRunning &&
-          state.duration != Duration.zero) {
-        saveTimeEntry();
-      }
-    });
+    if (foundProject != null) {
+      startTimer();
+      print('you are inside');
+      emit(state.copyWith(currentProject: foundProject));
+      emit(state.copyWith(isLoading: false));
+      startTimer();
+    } else if (foundProject == null &&
+        state.isRunning &&
+        state.duration != Duration.zero) {
+      await saveTimeEntry();
+      emit(state.copyWith(isLoading: false));
+    }
   }
   // endregion
 
@@ -150,7 +159,6 @@ class TimerCubit extends Cubit<TimerState> {
   }
 
   Future<void> saveTimeEntry() async {
-    stopTimer();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {}
     TimeEntry timeEntry = TimeEntry(
@@ -163,9 +171,9 @@ class TimerCubit extends Cubit<TimerState> {
         autoAdding: state.autoMode);
 
     await DBHelper.instance.addTime(timeEntry);
-    // if (entryId != null) {
-    //   emit(state.copyWith(duration: const Duration()));
-    // }
+    emit(state.copyWith(isLoading: false));
+    print('send');
+    stopTimer();
     resetTimer();
   }
 }

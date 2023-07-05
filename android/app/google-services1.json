@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "739229502650-1h1hamgvmh9s5vdmnjm12u9tohe7ivqe.apps.googleusercontent.com",
+              "client_id": "739229502650-3m8rn6397hav2m9s4sasuqhusel37rc1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.timerGTwo"
+                "bundle_id": "com.example.timerg"
               }
             }
           ]
@@ -68,10 +68,10 @@
               "client_type": 3
             },
             {
-              "client_id": "739229502650-1h1hamgvmh9s5vdmnjm12u9tohe7ivqe.apps.googleusercontent.com",
+              "client_id": "739229502650-3m8rn6397hav2m9s4sasuqhusel37rc1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.timerGTwo"
+                "bundle_id": "com.example.timerg"
               }
             }
           ]
